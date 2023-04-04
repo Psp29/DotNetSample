@@ -33,7 +33,7 @@ pipeline
 		always {
 			// archiveArtifacts artifacts: 'out/*', 
 			// onlyIfSuccessful: true
-			sh 'Done :)'
+			sh 'Done.'
 		}
 	}
 }
