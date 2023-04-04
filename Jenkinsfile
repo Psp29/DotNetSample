@@ -23,11 +23,17 @@ pipeline
 				sh 'dotnet publish -c Release -o out'
 			}
 		}
+		stage('Deploying the site') {
+			steps {
+				sh 'nohup dotnet out/MyWebApp.dll > /dev/null 2>&1 &'
+			}
+		}
 	}
 	post {
 		always {
-			archiveArtifacts artifacts: 'out/*', 
-			onlyIfSuccessful: true
+			// archiveArtifacts artifacts: 'out/*', 
+			// onlyIfSuccessful: true
+			sh 'Done :)'
 		}
 	}
 }
