@@ -18,22 +18,9 @@ pipeline
 				sh 'dotnet clean'
 			}
 		}
-		// stage('Installing Depedencies...') {
-		// 	steps {
-		// 		// sh 'cd products_admin'
-		// 		sh 'dotnet tool install --global dotnet-ef --version 3.1'
-		// 		sh 'export PATH=$PATH:/root/.dotnet/tools'
-		// 	}
-		// }
-		// stage('DB Migration') {
-		// 	steps {
-		// 		sh 'dotnet-ef database update'
-		// 	}
-		// }
 		stage('Building the code...') {
 			steps {
 				sh 'dotnet publish -c Release -o out'
-				// sh 'cp Users.db out'
 			}
 		}
 	}
