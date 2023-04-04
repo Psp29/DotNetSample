@@ -29,11 +29,4 @@ pipeline
 			}
 		}
 	}
-	post {
-		always {
-			// archiveArtifacts artifacts: 'out/*', 
-			// onlyIfSuccessful: true
-			sh 'Done :)'
-		}
-	}
 }
