@@ -16,6 +16,7 @@ pipeline
 		// }
 		stage('SonarQube Installation') {
 			steps {
+				sh 'apt-get update'
     			sh 'dotnet tool install --global dotnet-sonarscanner'
 				sh 'dotnet tool install --global dotnet-reportgenerator-globaltool'
 				sh 'apt-get install openjdk-17-jdk -y'
