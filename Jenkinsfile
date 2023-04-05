@@ -3,16 +3,30 @@ pipeline
 	agent {
 		docker {
 			image 'mcr.microsoft.com/dotnet/sdk:3.1'
-			args '-u root:root -e PATH=$PATH:/root/.dotnet/tools -v /var/run/docker.sock:/var/run/docker.sock'
+			args '-u root:root -e PATH=$PATH:/root/.dotnet/tools -v /var/run/docker.sock:/var/run/docker.sock '
 			} 
 	}
 	stages {
-		stage('Install Docker') {
-      		steps {
-        		sh 'curl -fsSL https://get.docker.com -o get-docker.sh'
-        		sh 'sh get-docker.sh'
-        		// sh 'usermod -aG docker jenkins'
-      		}
+		// stage('Install Docker') {
+      	// 	steps {
+        // 		sh 'curl -fsSL https://get.docker.com -o get-docker.sh'
+        // 		sh 'sh get-docker.sh'
+        // 		// sh 'usermod -aG docker jenkins'
+      	// 	}
+		// }
+		stage('SonarQube Installation') {
+			steps {
+    			sh 'dotnet tool install --global dotnet-sonarscanner'
+				sh 'dotnet tool install --global dotnet-reportgenerator-globaltool'
+			}
+  		}
+		stage('Begin SonarQube Scan') {
+			steps {
+				sh 'dotnet sonarscanner begin \
+					/k:"demo-dotnet-app" \
+					/d:sonar.host.url="https://sonar.prasaddevops.cloud" \
+					/d:sonar.login="sqp_5345a825506219d3e6a76d5557c9e85fe159ee22"'
+			}
 		}
 		stage('Restoring') {
 			steps {
@@ -25,20 +39,10 @@ pipeline
 		// 		sh 'dotnet clean'
 		// 	}
 		// }
-		stage('SonarQube Analysis') {
-			steps {
-    			// withSonarQubeEnv('sonarqube-9.9') {
-      				// sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"demo-dotnet-app\""
-					sh 'docker run --rm -v $PWD:/app -w /app -e SONAR_HOST_URL="https://sonar.prasaddevops.cloud" -e SONAR_LOGIN="sqp_5345a825506219d3e6a76d5557c9e85fe159ee22" sonarsource/sonar-scanner-cli:latest dotnet build && dotnet sonarscanner'
-      				sh "dotnet build"
-      				// sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll end"
-					sh "dotnet clean"
-    			// }
-			}
-  		}
 		stage('Building the code...') {
 			steps {
 				sh 'dotnet publish -c Release -o out'
+				sh 'dotnet sonarscanner end /d:sonar.login="sqp_5345a825506219d3e6a76d5557c9e85fe159ee22"'
 			}
 		}
 		stage('Deploying the site') {
