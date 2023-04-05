@@ -19,7 +19,7 @@ pipeline
 				sh 'apt-get update'
     			sh 'dotnet tool install --global dotnet-sonarscanner'
 				sh 'dotnet tool install --global dotnet-reportgenerator-globaltool'
-				sh 'apt-get install openjdk-11-jdk -y'
+				sh 'apt-get install openjdk-11-jre -y'
 				sh 'export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/bin/java'
 			}
   		}
