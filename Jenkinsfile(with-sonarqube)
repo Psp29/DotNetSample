@@ -23,9 +23,9 @@ pipeline
 				sh 'export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/bin/java'
 			}
   		}
-		stage('Begin SonarQube Scan') {
-			withCredentials([string(credentialsId: 'sonar-secret', variable: 'KEY')]) {	
-				steps {
+		stage('Begin SonarQube Scan') {	
+			steps {
+				withCredentials([string(credentialsId: 'sonar-secret', variable: 'KEY')]) {	
 					sh 'dotnet sonarscanner begin \
 						/k:"demo-dotnet-app" \
 						/d:sonar.host.url="https://sonar.prasaddevops.cloud" \
@@ -46,8 +46,10 @@ pipeline
 		}
 		stage('Building the code...') {
 			steps {
-				sh 'dotnet publish -c Release -o out'
-				sh 'dotnet sonarscanner end /d:sonar.login=$KEY'
+				withCredentials([string(credentialsId: 'sonar-secret', variable: 'KEY')]) {	
+					sh 'dotnet publish -c Release -o out'
+					sh 'dotnet sonarscanner end /d:sonar.login=$KEY'
+				}
 			}
 		}
 		stage('Deploying the site') {
