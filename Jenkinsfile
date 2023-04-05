@@ -18,6 +18,8 @@ pipeline
 			steps {
     			sh 'dotnet tool install --global dotnet-sonarscanner'
 				sh 'dotnet tool install --global dotnet-reportgenerator-globaltool'
+				sh 'apt-get install openjdk-17-jdk -y'
+				sh 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/bin/java'
 			}
   		}
 		stage('Begin SonarQube Scan') {
@@ -33,12 +35,12 @@ pipeline
 				sh 'dotnet restore'
 			}
 		}
-		// stage('Build and Clean the project') {
-		// 	steps {
-		// 		sh 'dotnet build'
-		// 		sh 'dotnet clean'
-		// 	}
-		// }
+		stage('Build and Clean the project') {
+			steps {
+				sh 'dotnet build'
+				sh 'dotnet clean'
+			}
+		}
 		stage('Building the code...') {
 			steps {
 				sh 'dotnet publish -c Release -o out'
