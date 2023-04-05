@@ -12,12 +12,20 @@ pipeline
 				sh 'dotnet restore'
 			}
 		}
-		stage('Build and Clean the project') {
-			steps {
-				sh 'dotnet build'
-				sh 'dotnet clean'
-			}
-		}
+		// stage('Build and Clean the project') {
+		// 	steps {
+		// 		sh 'dotnet build'
+		// 		sh 'dotnet clean'
+		// 	}
+		// }
+		stage('SonarQube Analysis') {
+    		def scannerHome = tool 'SonarScanner for MSBuild'
+    		withSonarQubeEnv() {
+      			sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"demo-dotnet-app\""
+      			sh "dotnet build"
+      			sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll end"
+    		}
+  		}
 		stage('Building the code...') {
 			steps {
 				sh 'dotnet publish -c Release -o out'
