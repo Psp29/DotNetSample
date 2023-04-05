@@ -9,9 +9,9 @@ pipeline
 	stages {
 		stage('Install Docker') {
       		steps {
-        		sh 'curl -fsSL https://get.docker.com -o get-docker.sh'
-        		sh 'sh get-docker.sh'
-        		sh 'sudo usermod -aG docker jenkins'
+        		sh 'apk update && add apk-tools'
+        		sh 'apk add docker'
+        		sh 'addgroup jenkins docker'
       		}
 		}
 		stage('Restoring') {
