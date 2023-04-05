@@ -19,12 +19,14 @@ pipeline
 		// 	}
 		// }
 		stage('SonarQube Analysis') {
-    		def scannerHome = tool 'SonarScanner for MSBuild'
-    		withSonarQubeEnv() {
-      			sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"demo-dotnet-app\""
-      			sh "dotnet build"
-      			sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll end"
-    		}
+			steps {
+    			def scannerHome = tool 'SonarScanner for MSBuild'
+    			withSonarQubeEnv() {
+      				sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"demo-dotnet-app\""
+      				sh "dotnet build"
+      				sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll end"
+    			}
+			}
   		}
 		stage('Building the code...') {
 			steps {
