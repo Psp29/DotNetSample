@@ -47,7 +47,7 @@ pipeline
 		stage('Building the code...') {
 			steps {
 				withCredentials([string(credentialsId: 'sonar-secret', variable: 'KEY')]) {	
-					sh 'dotnet publish -c Release -o out --no-build --no-restore'
+					sh 'dotnet publish -c Release -o out'
 					sh 'dotnet sonarscanner end /d:sonar.login=$KEY'
 					sh 'dotnet clean'
 				}
