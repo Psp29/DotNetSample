@@ -29,25 +29,26 @@ pipeline
 					sh 'dotnet sonarscanner begin \
 						/k:"demo-dotnet-app" \
 						/d:sonar.host.url="https://sonar.prasaddevops.cloud" \
-						/d:sonar.login=$KEY'
+						/d:sonar.login=$KEY \
+						/d:sonar.coverageReportPaths="coverage/SonarQube.xml"'
 				}
 			}
 		}
 		stage('Restoring') {
 			steps {
-				sh 'dotnet restore'
+				sh 'dotnet restore -s "https://api.nuget.org/v3/index.json"'
 			}
 		}
 		stage('Build and Clean the project') {
 			steps {
-				sh 'dotnet build'
+				sh 'dotnet build --no-restore'
 				sh 'dotnet clean'
 			}
 		}
 		stage('Building the code...') {
 			steps {
 				withCredentials([string(credentialsId: 'sonar-secret', variable: 'KEY')]) {	
-					sh 'dotnet publish -c Release -o out'
+					sh 'dotnet publish -c Release -o out --no-build --no-restore'
 					sh 'dotnet sonarscanner end /d:sonar.login=$KEY'
 				}
 			}
