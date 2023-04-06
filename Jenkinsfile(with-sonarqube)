@@ -47,6 +47,7 @@ pipeline
 		stage('Building the code...') {
 			steps {
 				withCredentials([string(credentialsId: 'sonar-secret', variable: 'KEY')]) {	
+					sh 'reportgenerator "-reports:./coverage/*/coverage.cobertura.xml" "-targetdir:coverage" "-reporttypes:SonarQube"'
 					sh 'dotnet publish -c Release -o out'
 					sh 'dotnet sonarscanner end /d:sonar.login=$KEY'
 					sh 'dotnet clean'
