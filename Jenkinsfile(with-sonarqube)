@@ -44,11 +44,12 @@ pipeline
 				sh 'dotnet build --no-restore'
 			}
 		}
-		stage('Building the code...') {
+		stage('Publish') {
 			steps {
 				withCredentials([string(credentialsId: 'sonar-secret', variable: 'KEY')]) {	
+					sh 'dotnet test ./*.csproj --collect:"XPlat Code Coverage" --results-directory ./coverage'
 					sh 'reportgenerator "-reports:./coverage/*/coverage.cobertura.xml" "-targetdir:coverage" "-reporttypes:SonarQube"'
-					sh 'dotnet publish -c Release -o out'
+					sh 'dotnet publish -c Release -o out --no-restore'
 					sh 'dotnet sonarscanner end /d:sonar.login=$KEY'
 					sh 'dotnet clean'
 				}
