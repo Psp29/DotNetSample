@@ -29,8 +29,7 @@ pipeline
 					sh 'dotnet sonarscanner begin \
 						/k:"demo-dotnet-app" \
 						/d:sonar.host.url="https://sonar.prasaddevops.cloud" \
-						/d:sonar.login=$KEY \
-						/d:sonar.coverageReportPaths="coverage/SonarQube.xml"'
+						/d:sonar.login=$KEY'
 				}
 			}
 		}
@@ -47,8 +46,8 @@ pipeline
 		stage('Publish') {
 			steps {
 				withCredentials([string(credentialsId: 'sonar-secret', variable: 'KEY')]) {	
-					sh 'dotnet test ./*.csproj --collect:"XPlat Code Coverage" --results-directory ./coverage'
-					sh 'reportgenerator "-reports:./coverage/*/coverage.cobertura.xml" "-targetdir:coverage" "-reporttypes:SonarQube"'
+					// sh 'dotnet test ./*.csproj --collect:"XPlat Code Coverage" --results-directory ./coverage'
+					// sh 'reportgenerator "-reports:./coverage/*/coverage.cobertura.xml" "-targetdir:coverage" "-reporttypes:SonarQube"'
 					sh 'dotnet publish -c Release -o out --no-restore'
 					sh 'dotnet sonarscanner end /d:sonar.login=$KEY'
 					sh 'dotnet clean'
