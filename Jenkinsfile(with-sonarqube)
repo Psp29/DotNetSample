@@ -42,7 +42,6 @@ pipeline
 		stage('Build and Clean the project') {
 			steps {
 				sh 'dotnet build --no-restore'
-				sh 'dotnet clean'
 			}
 		}
 		stage('Building the code...') {
@@ -50,6 +49,7 @@ pipeline
 				withCredentials([string(credentialsId: 'sonar-secret', variable: 'KEY')]) {	
 					sh 'dotnet publish -c Release -o out --no-build --no-restore'
 					sh 'dotnet sonarscanner end /d:sonar.login=$KEY'
+					sh 'dotnet clean'
 				}
 			}
 		}
